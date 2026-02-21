@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"encoding/binary"
 	"fmt"
 	"math"
@@ -10,6 +12,12 @@ import (
 
 	"github.com/veandco/go-sdl2/sdl"
 )
+
+//go:embed font.tga
+var fontTGABytes []byte
+
+//go:embed ld48.tga
+var ld48TGABytes []byte
 
 const (
 	PI = 3.14159265
@@ -504,24 +512,18 @@ func main() {
 	defer sdl.CloseAudioDevice(deviceID)
 
 	// Load assets
-	f, err := LoadTGA("../font.tga")
+	f, err := LoadTGAFromIoReader(bytes.NewReader(fontTGABytes))
 	if err != nil {
-		f, err = LoadTGA("font.tga")
-		if err != nil {
-			fmt.Println("Error loading font.tga", err)
-			return
-		}
+		fmt.Println("Error loading font.tga", err)
+		return
 	}
 	font = *f
 	font.Width = font.Height
 
-	l, err := LoadTGA("../ld48.tga")
+	l, err := LoadTGAFromIoReader(bytes.NewReader(ld48TGABytes))
 	if err != nil {
-		l, err = LoadTGA("ld48.tga")
-		if err != nil {
-			fmt.Println("Error loading ld48.tga", err)
-			return
-		}
+		fmt.Println("Error loading ld48.tga", err)
+		return
 	}
 	ld48 = *l
 	ld48.Width = ld48.Pitch // Fix width from C++ code logic
