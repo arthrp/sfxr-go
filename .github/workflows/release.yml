@@ -49,6 +49,7 @@ jobs:
 
       - name: Add go to PATH (windows)
         if: matrix.os == 'windows-latest'
+        shell: pwsh
         run: |
           $env:Path += 'C:\Go\bin'
           $env:GITHUB_PATH += 'C:\Go\bin'
